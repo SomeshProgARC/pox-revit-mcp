@@ -1,0 +1,116 @@
+{
+  "server": {
+    "name": "POX Revit MCP",
+    "version": "0.2.0",
+    "instructions": "Use these tools for read-only inspection of the active Autodesk Revit model through POX. Never claim that a result changed the model; this MCP surface is read-only."
+  },
+  "tools": [
+    {
+      "name": "pox_active_document_info",
+      "title": "Active document info",
+      "description": "Use this when the user asks what Revit document/model is active, including title, path, active view, selection count, and warning count.",
+      "readOnlyHint": true,
+      "idempotentHint": true,
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      }
+    },
+    {
+      "name": "pox_list_categories",
+      "title": "List categories",
+      "description": "Use this when the user asks which Revit model categories exist in the active document and how many elements are in each category.",
+      "readOnlyHint": true,
+      "idempotentHint": true,
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      }
+    },
+    {
+      "name": "pox_query_elements",
+      "title": "Query elements",
+      "description": "Use this when the user asks for a read-only table of Revit elements by category and parameter filters. The MVP supports Doors, including Fire Rating, Mark, Type, Level, Width, and Height.",
+      "readOnlyHint": true,
+      "idempotentHint": true,
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": ["Doors", "OST_Doors"],
+            "default": "Doors"
+          },
+          "filters": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "parameter": {
+                  "type": "string"
+                },
+                "operator": {
+                  "type": "string",
+                  "enum": ["is_not_empty"]
+                },
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": ["parameter", "operator"]
+            }
+          },
+          "columns": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "ElementId",
+                "Mark",
+                "Type",
+                "Level",
+                "Fire Rating",
+                "Width",
+                "Height"
+              ]
+            }
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2000,
+            "default": 500
+          }
+        }
+      }
+    },
+    {
+      "name": "pox_current_selection",
+      "title": "Current selection",
+      "description": "Use this when the user asks what elements are currently selected in Revit.",
+      "readOnlyHint": true,
+      "idempotentHint": true,
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      }
+    },
+    {
+      "name": "pox_warnings_summary",
+      "title": "Warnings summary",
+      "description": "Use this when the user asks for a grouped summary of warnings in the active Revit document.",
+      "readOnlyHint": true,
+      "idempotentHint": true,
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      }
+    }
+  ]
+}
